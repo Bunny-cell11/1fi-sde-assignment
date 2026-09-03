@@ -8,19 +8,32 @@ const pool = new Pool({
 });
 
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+
+const prisma = new PrismaClient({
+  adapter,
+});
 
 async function main() {
+  console.log("Clearing existing data...");
+
   await prisma.emiPlan.deleteMany();
   await prisma.productVariant.deleteMany();
   await prisma.product.deleteMany();
+
+  console.log("Creating products...");
+
+  // ==================================================
+  // 1. iPhone 17 Pro
+  // ==================================================
 
   const iphone = await prisma.product.create({
     data: {
       slug: "iphone-17-pro",
       name: "iPhone 17 Pro",
       brand: "Apple",
-      description: "Premium Apple smartphone with advanced performance.",
+      description:
+        "Premium Apple smartphone with advanced performance and a professional camera system.",
+
       variants: {
         create: [
           {
@@ -28,8 +41,8 @@ async function main() {
             storage: "256GB",
             mrp: 139999,
             price: 129999,
-            imageUrl:
-              "https://placehold.co/600x600?text=iPhone+17+Pro+Silver",
+            imageUrl: "/images/iphone-17-pro-silver.jpg",
+
             emiPlans: {
               create: [
                 {
@@ -47,13 +60,14 @@ async function main() {
               ],
             },
           },
+
           {
             color: "Black",
             storage: "256GB",
             mrp: 139999,
             price: 129999,
-            imageUrl:
-              "https://placehold.co/600x600?text=iPhone+17+Pro+Black",
+            imageUrl: "/images/iphone-17-pro-black.png",
+
             emiPlans: {
               create: [
                 {
@@ -76,13 +90,18 @@ async function main() {
     },
   });
 
+  // ==================================================
+  // 2. Samsung Galaxy S24 Ultra
+  // ==================================================
+
   const samsung = await prisma.product.create({
     data: {
       slug: "samsung-galaxy-s24-ultra",
       name: "Samsung Galaxy S24 Ultra",
       brand: "Samsung",
       description:
-        "Flagship Samsung smartphone with powerful camera and display.",
+        "Flagship Samsung smartphone with a powerful camera, titanium design and immersive display.",
+
       variants: {
         create: [
           {
@@ -90,8 +109,8 @@ async function main() {
             storage: "256GB",
             mrp: 134999,
             price: 119999,
-            imageUrl:
-              "https://placehold.co/600x600?text=Galaxy+S24+Ultra+Black",
+            imageUrl: "/images/galaxy-s24-ultra-black.jpg",
+
             emiPlans: {
               create: [
                 {
@@ -109,13 +128,14 @@ async function main() {
               ],
             },
           },
+
           {
             color: "Titanium Gray",
             storage: "512GB",
             mrp: 149999,
             price: 134999,
-            imageUrl:
-              "https://placehold.co/600x600?text=Galaxy+S24+Ultra+Gray",
+            imageUrl: "/images/galaxy-s24-ultra-gray.jpg",
+
             emiPlans: {
               create: [
                 {
@@ -138,13 +158,18 @@ async function main() {
     },
   });
 
+  // ==================================================
+  // 3. Google Pixel 9 Pro
+  // ==================================================
+
   const pixel = await prisma.product.create({
     data: {
       slug: "google-pixel-9-pro",
       name: "Google Pixel 9 Pro",
       brand: "Google",
       description:
-        "Google flagship smartphone with advanced AI-powered features.",
+        "Google flagship smartphone with advanced AI-powered features and an innovative camera system.",
+
       variants: {
         create: [
           {
@@ -152,8 +177,8 @@ async function main() {
             storage: "128GB",
             mrp: 109999,
             price: 94999,
-            imageUrl:
-              "https://placehold.co/600x600?text=Pixel+9+Pro+Obsidian",
+            imageUrl: "/images/pixel-9-pro-obsidian.jpg",
+
             emiPlans: {
               create: [
                 {
@@ -171,13 +196,14 @@ async function main() {
               ],
             },
           },
+
           {
             color: "Porcelain",
             storage: "256GB",
             mrp: 119999,
             price: 104999,
-            imageUrl:
-              "https://placehold.co/600x600?text=Pixel+9+Pro+Porcelain",
+            imageUrl: "/images/pixel-9-pro-porcelain.svg",
+
             emiPlans: {
               create: [
                 {
@@ -200,17 +226,34 @@ async function main() {
     },
   });
 
+  // ==================================================
+  // Seed Summary
+  // ==================================================
+
+  console.log("");
+  console.log("=================================");
   console.log("Seed completed successfully!");
+  console.log("=================================");
+  console.log("");
 
   console.log("Products created:");
-  console.log("-", iphone.name);
-  console.log("-", samsung.name);
-  console.log("-", pixel.name);
+  console.log(`1. ${iphone.name} - 2 variants`);
+  console.log(`2. ${samsung.name} - 2 variants`);
+  console.log(`3. ${pixel.name} - 2 variants`);
+
+  console.log("");
+  console.log("Total:");
+  console.log("- 3 products");
+  console.log("- 6 variants");
+  console.log("- 12 EMI plans");
+  console.log("- Local product images");
 }
 
 main()
   .catch((error) => {
-    console.error("Seed failed:", error);
+    console.error("");
+    console.error("Seed failed:");
+    console.error(error);
     process.exit(1);
   })
   .finally(async () => {
