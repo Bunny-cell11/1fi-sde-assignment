@@ -1,15 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import ProductPage from "./pages/ProductPage";
+
 function App() {
   return (
-    <div className="min-h-screen">
-      <h1 className="text-3xl font-bold text-center mt-10">
-        1Fi EMI Store
-      </h1>
+    <BrowserRouter>
+      <Navbar />
 
-      <p className="text-center mt-4 text-gray-600">
-        Product EMI Platform
-      </p>
-    </div>
-  )
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route
+          path="/products/:slug"
+          element={<ProductPage />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
